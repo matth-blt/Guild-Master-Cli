@@ -112,9 +112,3 @@ guild-master-cli/
 ## 📝 License
 
 MIT License
-
-## 🙏 Acknowledgements
-
-- Original C++ version served as the foundation
-- Inspired by classic guild management games
-- UI inspired by Gemini CLI aesthetics
