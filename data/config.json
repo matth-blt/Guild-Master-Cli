@@ -1,0 +1,7 @@
+{
+    "difficulty": "medium",
+    "nbAdventurer": 30,
+    "nbAdventurerPerGuild": 10,
+    "goldStart": 1000,
+    "victoryLevel": 10
+}

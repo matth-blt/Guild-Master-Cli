@@ -1,0 +1,28 @@
+{
+  "name": "guild-master-cli",
+  "version": "1.0.0",
+  "description": "Guild Master - Jeu de gestion de guilde en CLI",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "build": "npm run build:macos && npm run build:linux && npm run build:windows",
+    "build:macos": "npx caxa --input . --output dist/guild-master-macos -- '{{caxa}}/node_modules/.bin/node' '{{caxa}}/index.js'",
+    "build:linux": "npx caxa --input . --output dist/guild-master-linux -- '{{caxa}}/node_modules/.bin/node' '{{caxa}}/index.js'",
+    "build:windows": "npx caxa --input . --output dist/guild-master-windows.exe -- '{{caxa}}/node_modules/.bin/node' '{{caxa}}/index.js'"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^7.2.1",
+    "boxen": "^8.0.1",
+    "chalk": "^5.4.1",
+    "figlet": "^1.8.0",
+    "gradient-string": "^3.0.0",
+    "ora": "^8.1.1"
+  },
+  "devDependencies": {
+    "caxa": "^3.0.1"
+  },
+  "keywords": ["cli", "game", "guild", "rpg"],
+  "author": "Matthieu",
+  "license": "MIT"
+}
