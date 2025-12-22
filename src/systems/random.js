@@ -3,9 +3,12 @@ import { Guild } from '../models/guild.js';
 import { Mission, generateMissions } from '../models/mission.js';
 import { Classe, Personality, Armes, Armures, Accessoires, ArmeParDefaut, ArmureParDefaut } from '../models/enums.js';
 
-// ===== RANDOM GENERATOR SYSTEM =====
+/**
+ * Random generation system for adventurers, guilds, and missions
+ * @module systems/random
+ */
 
-// Noms d'aventuriers
+/** Available adventurer first names */
 const PRENOMS = [
     'Aldric', 'Balthazar', 'Cedric', 'Darius', 'Eldric', 'Fenris', 'Gideon', 'Hadrian',
     'Isolde', 'Jasper', 'Kira', 'Lyra', 'Magnus', 'Nadia', 'Orion', 'Petra',
@@ -14,30 +17,39 @@ const PRENOMS = [
     'Gareth', 'Helena', 'Ivy', 'Jace', 'Kael', 'Luna', 'Mikael', 'Nyx'
 ];
 
+/** Available guild names */
 const NOMS_GUILDES = [
-    'Les Faucons de Fer',
-    'La Lame d\'Argent',
-    'Les Chevaliers de l\'Aube',
-    'L\'Ordre du Dragon',
-    'Les Ombres Silencieuses',
-    'La Compagnie du Crépuscule',
-    'Les Gardiens de la Flamme',
-    'La Légion des Braves',
-    'Les Chasseurs d\'Étoiles',
+    'Les Faucons de Fer', 'La Lame d\'Argent', 'Les Chevaliers de l\'Aube',
+    'L\'Ordre du Dragon', 'Les Ombres Silencieuses', 'La Compagnie du Crépuscule',
+    'Les Gardiens de la Flamme', 'La Légion des Braves', 'Les Chasseurs d\'Étoiles',
     'L\'Alliance des Héros'
 ];
 
-// Génère un nombre aléatoire entre min et max inclus
+/**
+ * Generates a random integer between min and max (inclusive)
+ * @param {number} min - Minimum value
+ * @param {number} max - Maximum value
+ * @returns {number} Random integer
+ */
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Sélectionne un élément aléatoire d'un tableau
+/**
+ * Selects a random element from an array
+ * @param {Array} array - Source array
+ * @returns {*} Random element
+ */
 function randomElement(array) {
     return array[Math.floor(Math.random() * array.length)];
 }
 
-// Génère des statistiques basées sur le niveau et la classe
+/**
+ * Generates stats based on level and class
+ * @param {number} niveau - Character level
+ * @param {string} classe - Character class
+ * @returns {Object} Generated stats object
+ */
 function generateStats(niveau, classe) {
     const baseStats = {
         [Classe.VILLAGEOIS]: { pv: 80, atk: 5, def: 5, vit: 5, crit: 3, esq: 3 },
@@ -49,11 +61,12 @@ function generateStats(niveau, classe) {
     };
 
     const base = baseStats[classe] || baseStats[Classe.VILLAGEOIS];
+    const pvMax = base.pv + niveau * 10 + randomInt(-5, 10);
 
     return {
         niveau,
-        pv: base.pv + niveau * 10 + randomInt(-5, 10),
-        pvMax: base.pv + niveau * 10 + randomInt(-5, 10),
+        pv: pvMax,
+        pvMax: pvMax,
         attaque: base.atk + niveau * 2 + randomInt(-2, 3),
         defense: base.def + niveau * 2 + randomInt(-2, 3),
         vitesse: base.vit + niveau + randomInt(-1, 2),
@@ -65,7 +78,11 @@ function generateStats(niveau, classe) {
     };
 }
 
-// Génère un aventurier aléatoire
+/**
+ * Generates a random adventurer
+ * @param {number} niveauMoyen - Target average level
+ * @returns {Adventurer} Generated adventurer
+ */
 export function generateRandomAdventurer(niveauMoyen = 1) {
     const niveau = Math.max(1, niveauMoyen + randomInt(-1, 2));
     const classes = Object.values(Classe).filter(c => c !== Classe.VILLAGEOIS);
@@ -82,85 +99,95 @@ export function generateRandomAdventurer(niveauMoyen = 1) {
             armure: ArmureParDefaut[classe] || Armures.AUCUNE,
             accessoire: Accessoires.AUCUN
         },
-        etat: {
-            vivant: true,
-            aFui: false,
-            blessure: 'Aucune',
-            statutSpecial: 'Aucun'
-        }
+        etat: { vivant: true, aFui: false, blessure: 'Aucune', statutSpecial: 'Aucun' }
     });
 }
 
-// Génère une liste d'aventuriers
+/**
+ * Generates multiple adventurers with unique names
+ * @param {number} count - Number of adventurers
+ * @param {number} niveauMoyen - Target average level
+ * @returns {Adventurer[]} Array of adventurers
+ */
 export function generateAdventurers(count, niveauMoyen = 1) {
     const aventuriers = [];
     const nomsUtilises = new Set();
 
     for (let i = 0; i < count; i++) {
         let aventurier = generateRandomAdventurer(niveauMoyen);
-
-        // Éviter les doublons de noms
         while (nomsUtilises.has(aventurier.name)) {
             aventurier = generateRandomAdventurer(niveauMoyen);
         }
         nomsUtilises.add(aventurier.name);
-
         aventuriers.push(aventurier);
     }
-
     return aventuriers;
 }
 
-// Génère une guilde avec des aventuriers
+/**
+ * Generates a guild with adventurers
+ * @param {string} nom - Guild name
+ * @param {number} nbAventuriers - Number of adventurers
+ * @param {number} orDepart - Starting gold
+ * @param {boolean} isIA - Whether this is an AI-controlled guild
+ * @returns {Guild} Generated guild
+ */
 export function generateGuild(nom, nbAventuriers, orDepart, isIA = false) {
     const aventuriers = generateAdventurers(nbAventuriers, 1);
-
     return new Guild({
-        nom,
-        aventuriers,
-        inventaire: [],
-        or: orDepart,
-        reputation: isIA ? randomInt(50, 150) : 0,
-        isIA,
+        nom, aventuriers, inventaire: [], or: orDepart,
+        reputation: isIA ? randomInt(50, 150) : 0, isIA,
         agressivite: isIA ? randomInt(30, 70) : 50,
         prudence: isIA ? randomInt(30, 70) : 50
     });
 }
 
-// Génère plusieurs guildes (1 joueur + N IA)
+/**
+ * Generates multiple guilds (1 player + N AI)
+ * @param {number} nbGuildes - Total number of guilds
+ * @param {number} nbAventuriersParGuilde - Adventurers per guild
+ * @param {number} orDepart - Starting gold
+ * @returns {Guild[]} Array of guilds (first is player, rest are AI)
+ */
 export function generateGuilds(nbGuildes = 3, nbAventuriersParGuilde = 10, orDepart = 1000) {
     const guildes = [];
     const nomsUtilises = new Set();
 
     for (let i = 0; i < nbGuildes; i++) {
         let nom;
-        do {
-            nom = randomElement(NOMS_GUILDES);
-        } while (nomsUtilises.has(nom));
+        do { nom = randomElement(NOMS_GUILDES); } while (nomsUtilises.has(nom));
         nomsUtilises.add(nom);
-
-        const isIA = i > 0; // Première guilde = joueur, les autres = IA
-        guildes.push(generateGuild(nom, nbAventuriersParGuilde, orDepart, isIA));
+        guildes.push(generateGuild(nom, nbAventuriersParGuilde, orDepart, i > 0));
     }
-
     return guildes;
 }
 
-// Génère des candidats pour le recrutement
+/**
+ * Generates recruitment candidates
+ * @param {number} count - Number of candidates
+ * @param {number} niveauMoyen - Target average level
+ * @returns {Adventurer[]} Array of candidates
+ */
 export function generateRecruitCandidates(count = 4, niveauMoyen = 2) {
     return generateAdventurers(count, niveauMoyen);
 }
 
-// Calcule le coût de recrutement d'un aventurier
+/**
+ * Calculates recruitment cost for an adventurer
+ * @param {Adventurer} aventurier - Adventurer to price
+ * @returns {number} Gold cost
+ */
 export function calculateRecruitCost(aventurier) {
-    return 100 * aventurier.stats.niveau +
-        aventurier.stats.attaque * 5 +
-        aventurier.stats.defense * 5;
+    return 100 * aventurier.stats.niveau + aventurier.stats.attaque * 5 + aventurier.stats.defense * 5;
 }
 
-// Génère des missions basées sur le tour actuel
+/**
+ * Generates missions based on current turn
+ * @param {number} tour - Current turn number
+ * @param {number} count - Number of missions
+ * @returns {Mission[]} Array of missions with difficulty scaling
+ */
 export function generateTurnMissions(tour, count = 5) {
-    // La difficulté moyenne augmente avec les tours
     const difficulteMoyenne = Math.min(8, 2 + Math.floor(tour / 3));
     return generateMissions(count, difficulteMoyenne);
 }

@@ -1,9 +1,22 @@
 import { Classe, Personality, Armes, Armures, Accessoires, Blessures, StatutsSpeciaux } from './enums.js';
 
-// ===== ADVENTURER CLASS =====
+/**
+ * Represents an adventurer in the guild
+ * @class Adventurer
+ */
 export class Adventurer {
+    /**
+     * Creates a new Adventurer instance
+     * @param {Object} options - Adventurer configuration
+     * @param {string} options.name - Adventurer name
+     * @param {string} options.classe - Character class
+     * @param {Object} options.stats - Combat statistics
+     * @param {string} options.personality - Personality trait
+     * @param {Object} options.equipement - Equipment loadout
+     * @param {Object} options.etat - Current state
+     */
     constructor({
-        name = 'Sans Nom',
+        name = 'Unnamed',
         classe = Classe.VILLAGEOIS,
         stats = {},
         personality = Personality.NEUTRE,
@@ -13,7 +26,6 @@ export class Adventurer {
         this.name = name;
         this.classe = classe;
 
-        // Statistics
         this.stats = {
             niveau: stats.niveau ?? 1,
             pv: stats.pv ?? 100,
@@ -30,14 +42,12 @@ export class Adventurer {
 
         this.personality = personality;
 
-        // Equipment
         this.equipement = {
             arme: equipement.arme ?? Armes.MAINS_NUES,
             armure: equipement.armure ?? Armures.AUCUNE,
             accessoire: equipement.accessoire ?? Accessoires.AUCUN
         };
 
-        // State
         this.etat = {
             vivant: etat.vivant ?? true,
             aFui: etat.aFui ?? false,
@@ -46,47 +56,59 @@ export class Adventurer {
         };
     }
 
-    // ----- GETTERS -----
+    /** @returns {boolean} True if adventurer is alive */
     isVivant() {
         return this.etat.vivant;
     }
 
+    /** @returns {boolean} True if adventurer is available for missions */
     isDisponible() {
         return this.etat.vivant && !this.etat.aFui;
     }
 
+    /** @returns {boolean} True if adventurer is injured */
     isBesse() {
         return this.etat.blessure !== Blessures.AUCUNE;
     }
 
-    // ----- METHODS -----
+    /** Heals the adventurer, removing injuries */
     soigner() {
         this.etat.blessure = Blessures.AUCUNE;
     }
 
+    /** Kills the adventurer */
     tuer() {
         this.etat.vivant = false;
     }
 
+    /**
+     * Applies an injury to the adventurer
+     * @param {string} blessure - Injury type
+     */
     blesser(blessure) {
         this.etat.blessure = blessure;
     }
 
+    /**
+     * Gains experience and levels up (+1 level per 100 XP)
+     * @param {number} xp - Experience points gained
+     */
     gainExperience(xp) {
-        // +1 niveau tous les 100 XP
-        const niveauxGagnes = Math.floor(xp / 100);
-        if (niveauxGagnes > 0) {
-            this.stats.niveau += niveauxGagnes;
-            // Augmentation des stats avec le niveau
-            this.stats.pvMax += niveauxGagnes * 10;
+        const levelsGained = Math.floor(xp / 100);
+        if (levelsGained > 0) {
+            this.stats.niveau += levelsGained;
+            this.stats.pvMax += levelsGained * 10;
             this.stats.pv = this.stats.pvMax;
-            this.stats.attaque += niveauxGagnes * 2;
-            this.stats.defense += niveauxGagnes * 2;
-            this.stats.vitesse += niveauxGagnes;
+            this.stats.attaque += levelsGained * 2;
+            this.stats.defense += levelsGained * 2;
+            this.stats.vitesse += levelsGained;
         }
     }
 
-    // Calcul de la puissance globale de l'aventurier
+    /**
+     * Calculates the adventurer's total power rating
+     * @returns {number} Power value
+     */
     getPuissance() {
         return (
             this.stats.niveau * 10 +
@@ -96,7 +118,10 @@ export class Adventurer {
         );
     }
 
-    // Clone pour simulation (ne modifie pas l'original)
+    /**
+     * Creates a deep clone for simulation (doesn't modify original)
+     * @returns {Adventurer} Cloned adventurer
+     */
     clone() {
         return new Adventurer({
             name: this.name,
@@ -108,7 +133,10 @@ export class Adventurer {
         });
     }
 
-    // Sérialisation pour sauvegarde
+    /**
+     * Serializes adventurer for saving
+     * @returns {Object} JSON representation
+     */
     toJSON() {
         return {
             name: this.name,
@@ -120,6 +148,11 @@ export class Adventurer {
         };
     }
 
+    /**
+     * Creates an Adventurer from saved data
+     * @param {Object} data - Saved adventurer data
+     * @returns {Adventurer} Restored adventurer
+     */
     static fromJSON(data) {
         return new Adventurer(data);
     }

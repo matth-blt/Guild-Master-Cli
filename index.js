@@ -5,6 +5,8 @@ import { GameManager } from './src/core/game.js';
 import { EtatPartie, TypeItem } from './src/models/enums.js';
 import { calculateRecruitCost } from './src/systems/random.js';
 import { hasSaveGame, getSaveInfo } from './src/systems/persistence.js';
+import { loadLanguage, t, availableLanguages } from './src/i18n/index.js';
+import { select } from '@inquirer/prompts';
 
 import {
     displayLogo,
@@ -39,6 +41,22 @@ import {
 
 import { colors, icons, formatGold, formatReputation, gradients } from './src/ui/theme.js';
 
+// ===== LANGUAGE SELECTION =====
+
+async function selectLanguage() {
+    clearScreen();
+    displayLogo();
+
+    const lang = await select({
+        message: 'Choose your language / Choisissez votre langue',
+        choices: availableLanguages.map(l => ({ name: l.name, value: l.code })),
+        theme: { prefix: '🌎' }
+    });
+
+    loadLanguage(lang);
+    return lang;
+}
+
 // ===== MAIN GAME LOOP =====
 
 let gameManager = null;
@@ -47,28 +65,28 @@ async function displayWelcome() {
     clearScreen();
     displayLogo();
 
-    console.log(gradients.title('  Bienvenue dans Guild Master!'));
+    console.log(gradients.title(`  ${t('welcome.title')}`));
     console.log();
-    console.log('  Vous êtes le maître d\'une guilde d\'aventuriers.');
-    console.log('  Gérez vos aventuriers, acceptez des missions, et faites prospérer votre guilde!');
-    console.log('  Affrontez des guildes rivales contrôlées par l\'IA!');
+    console.log(`  ${t('welcome.description1')}`);
+    console.log(`  ${t('welcome.description2')}`);
+    console.log(`  ${t('welcome.description3')}`);
     console.log();
 
     // Vérifier si une sauvegarde existe
     if (hasSaveGame()) {
         const info = getSaveInfo();
         if (info) {
-            displayInfo(`Sauvegarde trouvée: ${info.nomGuildeJoueur} (Tour ${info.tour})`);
+            displayInfo(t('welcome.saveFound', { name: info.nomGuildeJoueur, turn: info.tour }));
             console.log();
 
-            const charger = await confirmPrompt('Charger la partie sauvegardée?');
+            const charger = await confirmPrompt(t('welcome.loadSave'));
             if (charger) {
                 return 'load';
             }
         }
     }
 
-    await pressEnterPrompt('Appuyez sur Entrée pour commencer une nouvelle partie...');
+    await pressEnterPrompt(t('welcome.pressEnter'));
     return 'new';
 }
 
@@ -208,7 +226,7 @@ async function assignerAventuriersMission(mission) {
     displayMission(mission);
 
     try {
-        const indices = await selectMultipleAdventurersPrompt(aventuriersDispos, 4, 'Sélectionner votre équipe');
+        const indices = await selectMultipleAdventurersPrompt(aventuriersDispos, 4, 'Sélectionner votre équipe', mission);
 
         if (indices.length === 0) {
             displayWarning('Aucun aventurier sélectionné. Mission annulée.');
@@ -541,25 +559,29 @@ async function gameLoop() {
 
 async function main() {
     try {
+        // Sélection de la langue au démarrage
+        await selectLanguage();
+
         const mode = await displayWelcome();
         await initializeGame(mode);
         await gameLoop();
 
         clearScreen();
         displayLogo();
-        console.log(gradients.title('  Merci d\'avoir joué à Guild Master!'));
+        console.log(gradients.title(`  ${t('common.thanks')}`));
         console.log();
-        console.log('  À bientôt, Maître de Guilde!');
+        console.log(`  ${t('common.goodbye')}`);
         console.log();
     } catch (error) {
         if (error.message?.includes('User force closed')) {
             // Ctrl+C
             console.log('\n');
-            console.log(colors.textDim('Au revoir!'));
+            console.log(colors.textDim(t('common.goodbye')));
         } else {
-            console.error('Erreur:', error);
+            console.error('Error:', error);
         }
     }
 }
 
 main();
+

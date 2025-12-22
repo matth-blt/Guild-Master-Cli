@@ -1,0 +1,245 @@
+{
+    "lang": {
+        "select": "Choisissez votre langue",
+        "french": "Français",
+        "english": "English"
+    },
+    "welcome": {
+        "title": "Bienvenue dans Guild Master!",
+        "description1": "Vous êtes le maître d'une guilde d'aventuriers.",
+        "description2": "Gérez vos aventuriers, acceptez des missions, et faites prospérer votre guilde!",
+        "description3": "Affrontez des guildes rivales contrôlées par l'IA!",
+        "saveFound": "Sauvegarde trouvée: {{name}} (Tour {{turn}})",
+        "loadSave": "Charger la partie sauvegardée?",
+        "pressEnter": "Appuyez sur Entrée pour commencer une nouvelle partie..."
+    },
+    "menu": {
+        "title": "Menu Principal",
+        "guildStats": "Consulter la guilde",
+        "adventurers": "Liste des aventuriers",
+        "inventory": "Inventaire de la guilde",
+        "missions": "Missions disponibles",
+        "recruit": "Recruter un aventurier",
+        "equip": "Équiper un aventurier",
+        "infirmary": "Infirmerie (Soigner)",
+        "save": "Sauvegarder la partie",
+        "load": "Charger une partie",
+        "nextTurn": "Lancer le tour suivant",
+        "quit": "Quitter"
+    },
+    "headers": {
+        "guildStats": "STATISTIQUES DES GUILDES",
+        "adventurers": "LISTE DES AVENTURIERS",
+        "inventory": "INVENTAIRE DE LA GUILDE",
+        "missions": "MISSIONS DISPONIBLES",
+        "recruitment": "TAVERNE - RECRUTEMENT",
+        "equipment": "ÉQUIPER UN AVENTURIER",
+        "infirmary": "INFIRMERIE",
+        "save": "SAUVEGARDE",
+        "load": "CHARGEMENT",
+        "teamSelection": "SÉLECTION D'ÉQUIPE",
+        "missionReport": "RAPPORT DE MISSION",
+        "rivalGuilds": "RAPPORT DES GUILDES RIVALES",
+        "victory": "VICTOIRE!",
+        "defeat": "GAME OVER"
+    },
+    "stats": {
+        "level": "Niv.",
+        "hp": "PV",
+        "attack": "ATK",
+        "defense": "DEF",
+        "speed": "VIT",
+        "critical": "Critique",
+        "dodge": "Esquive",
+        "personality": "Personnalité",
+        "equipment": "Équipement",
+        "weapon": "Arme",
+        "armor": "Armure",
+        "accessory": "Accessoire",
+        "injury": "Blessure",
+        "status": "Statut",
+        "dead": "MORT",
+        "fled": "A fui la guilde",
+        "injured": "Blessé"
+    },
+    "guild": {
+        "gold": "Or",
+        "reputation": "Réputation",
+        "status": "Statut",
+        "adventurers": "Aventuriers",
+        "active": "actifs",
+        "injured": "blessés",
+        "averageLevel": "Niveau moyen",
+        "totalPower": "Puissance totale",
+        "yourGuild": "Votre guilde",
+        "objective": "Objectif: Atteindre le niveau moyen {{level}}",
+        "current": "actuel"
+    },
+    "mission": {
+        "difficulty": "Difficulté",
+        "type": "Type",
+        "tags": "Tags",
+        "reward": "Récompense",
+        "available": "missions disponibles",
+        "select": "Sélectionner une mission",
+        "assign": "Assigner des aventuriers à cette mission?",
+        "noMissions": "Aucune mission disponible pour le moment.",
+        "newMissions": "Nouvelles missions disponibles.",
+        "approach": "Approche",
+        "bossFight": "Combat de Boss",
+        "finalFight": "Combat final",
+        "success": "Réussite!",
+        "failure": "Échec..."
+    },
+    "missionResult": {
+        "complete": "SUCCÈS COMPLET",
+        "partial": "SUCCÈS PARTIEL",
+        "failed": "ÉCHEC",
+        "goldEarned": "gagnés",
+        "repEarned": "réputation",
+        "dead": "Morts",
+        "injured": "Blessés",
+        "fled": "Fuis",
+        "sacrifice": "se sacrifie héroïquement!",
+        "flees": "prend la fuite!",
+        "protects": "protège",
+        "steals": "disparaît avec un objet rare!"
+    },
+    "team": {
+        "select": "Sélectionner votre équipe",
+        "max": "max",
+        "missionInfo": "Mission: {{name}} | Tags: {{tags}}",
+        "bonusLegend": "★ = Bonus classe pour cette mission",
+        "noAdventurers": "Aucun aventurier disponible (tous blessés ou morts).",
+        "noneSelected": "Aucun aventurier sélectionné. Mission annulée.",
+        "notUseful": "Peu utile"
+    },
+    "recruit": {
+        "poolRefresh": "(Le pool se renouvelle chaque tour)",
+        "noCandidates": "Aucun candidat disponible pour l'instant.",
+        "newCandidates": "De nouveaux aventuriers arriveront au prochain tour.",
+        "cost": "Coût",
+        "notEnough": "Pas assez d'or",
+        "confirm": "Recruter {{name}} pour {{cost}} or?",
+        "joined": "a rejoint votre guilde!"
+    },
+    "infirmary": {
+        "costInfo": "Coût des soins par gravité:",
+        "light": "Blessure légère: 50 or",
+        "serious": "Blessure grave: 150 or",
+        "critical": "Blessure critique: 300 or",
+        "noInjured": "Aucun aventurier blessé!",
+        "heal": "Soigner un aventurier",
+        "healed": "a été soigné avec succès!",
+        "notInjured": "Cet aventurier n'est pas blessé"
+    },
+    "save": {
+        "saving": "Sauvegarde en cours...",
+        "success": "Partie sauvegardée avec succès!",
+        "error": "Erreur lors de la sauvegarde",
+        "file": "Fichier"
+    },
+    "load": {
+        "confirm": "Charger la dernière sauvegarde? (La progression actuelle sera perdue)",
+        "loading": "Chargement en cours...",
+        "success": "Partie chargée avec succès!",
+        "error": "Erreur lors du chargement",
+        "checkFile": "Vérifiez que le fichier saves/savegame.json existe.",
+        "turn": "Tour"
+    },
+    "turn": {
+        "end": "FIN DU TOUR {{turn}}",
+        "next": "Passage au tour suivant...",
+        "started": "Tour {{turn}} commencé!",
+        "noRivalAction": "Aucune guilde rivale n'a effectué de mission ce tour-ci.",
+        "newCandidates": "Nouveaux candidats à la taverne."
+    },
+    "victory": {
+        "congrats": "Félicitations! Votre guilde {{name}} est devenue légendaire!",
+        "finalStats": "Statistiques finales:",
+        "finalLevel": "Niveau moyen",
+        "finalGold": "Or final",
+        "finalRep": "Réputation",
+        "turnsPlayed": "Tours joués",
+        "activeAdventurers": "Aventuriers actifs"
+    },
+    "defeat": {
+        "fallen": "La guilde {{name}} a succombé...",
+        "reason": "Raison",
+        "noMoreAdventurers": "Plus d'aventuriers et pas assez d'or pour recruter",
+        "turnsSurvived": "Tours survécus",
+        "goldRemaining": "Or restant",
+        "finalRep": "Réputation finale"
+    },
+    "common": {
+        "back": "← Retour",
+        "continue": "Appuyez sur Entrée pour continuer...",
+        "yes": "Oui",
+        "no": "Non",
+        "confirm": "Êtes-vous sûr?",
+        "quitConfirm": "Êtes-vous sûr de vouloir quitter?",
+        "thanks": "Merci d'avoir joué à Guild Master!",
+        "goodbye": "À bientôt, Maître de Guilde!",
+        "loading": "Chargement...",
+        "generating": "Génération du monde...",
+        "generated": "Monde généré avec succès!",
+        "launchMission": "Lancement de la mission..."
+    },
+    "classes": {
+        "Guerrier": "Guerrier",
+        "Mage": "Mage",
+        "Voleur": "Voleur",
+        "Tank": "Tank",
+        "Prêtre": "Prêtre",
+        "Villageois": "Villageois"
+    },
+    "personalities": {
+        "Courageux": "Courageux",
+        "Lâche": "Lâche",
+        "Cupide": "Cupide",
+        "Loyal": "Loyal",
+        "Heroique": "Héroïque",
+        "Opportuniste": "Opportuniste",
+        "Prudent": "Prudent",
+        "Téméraire": "Téméraire"
+    },
+    "injuries": {
+        "Aucune": "Aucune",
+        "Égratignure": "Égratignure",
+        "Coupure Légère": "Coupure Légère",
+        "Brûlure Légère": "Brûlure Légère",
+        "Coupure Profonde": "Coupure Profonde",
+        "Fracture Grave": "Fracture Grave",
+        "Brûlure Grave": "Brûlure Grave",
+        "Empoisonné": "Empoisonné",
+        "Blessure Critique": "Blessure Critique",
+        "Membre Brisé": "Membre Brisé",
+        "Hémorragie": "Hémorragie",
+        "Paralysé Partiel": "Paralysé Partiel"
+    },
+    "rarities": {
+        "Commun": "Commun",
+        "Rare": "Rare",
+        "Épique": "Épique",
+        "Légendaire": "Légendaire"
+    },
+    "missionTypes": {
+        "Combat": "Combat",
+        "Exploration": "Exploration",
+        "Escorte": "Escorte",
+        "Collecte": "Collecte",
+        "Assassinat": "Assassinat",
+        "Défense": "Défense"
+    },
+    "missionTags": {
+        "Pièges": "Pièges",
+        "Stealth": "Furtivité",
+        "Boss": "Boss",
+        "Combat": "Combat",
+        "Magie": "Magie",
+        "Élémentaire": "Élémentaire",
+        "Longue Mission": "Longue Mission",
+        "Non-Morts": "Non-Morts",
+        "Embuscade": "Embuscade"
+    }
+}

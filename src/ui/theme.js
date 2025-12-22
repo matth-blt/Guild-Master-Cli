@@ -72,7 +72,7 @@ export const colors = {
     vitesse: chalk.hex('#44ff44')
 };
 
-// Icônes/symboles
+// Icônes/symboles (emojis originaux)
 export const icons = {
     success: '✓',
     error: '✗',
@@ -97,47 +97,98 @@ export const icons = {
     dot: '●'
 };
 
+// Calcule la largeur d'un caractère basée sur son codepoint
+function getCharWidth(char) {
+    const code = char.codePointAt(0);
+
+    // Variation selectors (ignorés, largeur 0)
+    if (code >= 0xFE00 && code <= 0xFE0F) return 0;
+
+    // Emojis dans le plan supplémentaire (U+1F000+) = largeur 2
+    if (code >= 0x1F000 && code <= 0x1FFFF) return 2;
+
+    // Emojis divers (dingbats, symboles)
+    if (code >= 0x2600 && code <= 0x27BF) return 2;  // ⚔, ❤, ⚠, etc.
+
+    // Caractères CJK, fullwidth = largeur 2
+    if (code >= 0x4E00 && code <= 0x9FFF) return 2;
+    if (code >= 0xFF00 && code <= 0xFFEF) return 2;
+
+    // Surrogate pairs (partie d'un emoji, déjà compté)
+    if (code >= 0xD800 && code <= 0xDFFF) return 0;
+
+    // Caractères normaux = largeur 1
+    return 1;
+}
+
+// Calcule la largeur visuelle d'une chaîne (comme visualLength en C++)
+export function visualLength(str) {
+    let len = 0;
+    // Supprimer les codes ANSI (couleurs chalk)
+    const plainStr = str.replace(/\x1b\[[0-9;]*m/g, '');
+
+    for (const char of plainStr) {
+        len += getCharWidth(char);
+    }
+    return len;
+}
+
+// Pad une chaîne à droite en tenant compte de la largeur visuelle
+export function padEndVisual(str, targetLength, padChar = ' ') {
+    const currentLen = visualLength(str);
+    if (currentLen >= targetLength) return str;
+    return str + padChar.repeat(targetLength - currentLen);
+}
+
+// Pad une chaîne à gauche en tenant compte de la largeur visuelle
+export function padStartVisual(str, targetLength, padChar = ' ') {
+    const currentLen = visualLength(str);
+    if (currentLen >= targetLength) return str;
+    return padChar.repeat(targetLength - currentLen) + str;
+}
+
 // Styles de bordures pour boxen
 export const boxStyles = {
     default: {
         padding: 1,
-        margin: 1,
-        borderStyle: 'round',
+        margin: 0,
+        borderStyle: 'single',
         borderColor: 'cyan'
     },
     success: {
         padding: 1,
-        margin: 1,
-        borderStyle: 'round',
+        margin: 0,
+        borderStyle: 'single',
         borderColor: 'green'
     },
     error: {
         padding: 1,
-        margin: 1,
-        borderStyle: 'round',
+        margin: 0,
+        borderStyle: 'single',
         borderColor: 'red'
     },
     warning: {
         padding: 1,
-        margin: 1,
-        borderStyle: 'round',
+        margin: 0,
+        borderStyle: 'single',
         borderColor: 'yellow'
     },
     title: {
         padding: 1,
-        margin: { top: 1, bottom: 1 },
+        margin: 0,
         borderStyle: 'double',
         borderColor: 'magenta',
         textAlignment: 'center'
     },
     menu: {
         padding: 1,
-        borderStyle: 'round',
+        margin: 0,
+        borderStyle: 'single',
         borderColor: 'cyan'
     },
     stats: {
         padding: 1,
-        margin: { top: 0, bottom: 1 },
+        margin: 0,
         borderStyle: 'single',
         borderColor: 'gray'
     }

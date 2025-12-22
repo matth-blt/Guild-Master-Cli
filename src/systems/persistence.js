@@ -4,19 +4,35 @@ import { Guild } from '../models/guild.js';
 import { Mission } from '../models/mission.js';
 import { Adventurer } from '../models/adventurer.js';
 
-// ===== PERSISTENCE SYSTEM =====
+/**
+ * Save/Load system for game persistence
+ * @module systems/persistence
+ */
 
 const SAVE_DIR = './saves';
 const SAVE_FILE = 'savegame.json';
 
-// Assure que le dossier de sauvegarde existe
+/**
+ * Ensures the save directory exists
+ * @private
+ */
 function ensureSaveDir() {
     if (!fs.existsSync(SAVE_DIR)) {
         fs.mkdirSync(SAVE_DIR, { recursive: true });
     }
 }
 
-// Sauvegarde l'état du jeu
+/**
+ * Saves the current game state to file
+ * @param {Object} gameState - Current game state
+ * @param {number} gameState.tour - Current turn
+ * @param {number} gameState.niveauVictoire - Victory level target
+ * @param {string} gameState.nomGuildeJoueur - Player guild name
+ * @param {Guild[]} gameState.guildes - All guilds
+ * @param {Mission[]} gameState.missionsGlobales - Available missions
+ * @param {Adventurer[]} gameState.candidatsRecrutement - Recruitment candidates
+ * @returns {{success: boolean, path?: string, error?: string}} Result
+ */
 export function saveGame(gameState) {
     try {
         ensureSaveDir();
@@ -34,28 +50,29 @@ export function saveGame(gameState) {
 
         const savePath = path.join(SAVE_DIR, SAVE_FILE);
         fs.writeFileSync(savePath, JSON.stringify(saveData, null, 2), 'utf-8');
-
         return { success: true, path: savePath };
     } catch (error) {
         return { success: false, error: error.message };
     }
 }
 
-// Charge l'état du jeu
+/**
+ * Loads game state from save file
+ * @returns {{success: boolean, gameState?: Object, error?: string}} Result with loaded state
+ */
 export function loadGame() {
     try {
         const savePath = path.join(SAVE_DIR, SAVE_FILE);
 
         if (!fs.existsSync(savePath)) {
-            return { success: false, error: 'Aucune sauvegarde trouvée' };
+            return { success: false, error: 'No save file found' };
         }
 
         const saveContent = fs.readFileSync(savePath, 'utf-8');
         const saveData = JSON.parse(saveContent);
 
-        // Vérification de version
         if (!saveData.version || !saveData.version.startsWith('2.')) {
-            return { success: false, error: 'Version de sauvegarde incompatible' };
+            return { success: false, error: 'Incompatible save version' };
         }
 
         const gameState = {
@@ -73,13 +90,19 @@ export function loadGame() {
     }
 }
 
-// Vérifie si une sauvegarde existe
+/**
+ * Checks if a save file exists
+ * @returns {boolean} True if save exists
+ */
 export function hasSaveGame() {
     const savePath = path.join(SAVE_DIR, SAVE_FILE);
     return fs.existsSync(savePath);
 }
 
-// Supprime la sauvegarde
+/**
+ * Deletes the save file
+ * @returns {{success: boolean, error?: string}} Result
+ */
 export function deleteSaveGame() {
     try {
         const savePath = path.join(SAVE_DIR, SAVE_FILE);
@@ -92,14 +115,14 @@ export function deleteSaveGame() {
     }
 }
 
-// Récupère les informations de la sauvegarde sans la charger
+/**
+ * Gets save file info without fully loading it
+ * @returns {{tour: number, nomGuildeJoueur: string, timestamp: string, version: string}|null} Save info or null
+ */
 export function getSaveInfo() {
     try {
         const savePath = path.join(SAVE_DIR, SAVE_FILE);
-
-        if (!fs.existsSync(savePath)) {
-            return null;
-        }
+        if (!fs.existsSync(savePath)) return null;
 
         const saveContent = fs.readFileSync(savePath, 'utf-8');
         const saveData = JSON.parse(saveContent);

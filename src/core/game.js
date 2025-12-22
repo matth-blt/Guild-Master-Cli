@@ -4,9 +4,18 @@ import { executeAllIATurns } from '../systems/ia-controller.js';
 import { saveGame, loadGame } from '../systems/persistence.js';
 import { EtatPartie } from '../models/enums.js';
 
-// ===== GAME MANAGER =====
-
+/**
+ * Central game orchestrator managing all game state and logic
+ * @class GameManager
+ */
 export class GameManager {
+    /**
+     * Creates a new GameManager
+     * @param {Object} config - Game configuration
+     * @param {number} config.victoryLevel - Level required to win
+     * @param {number} config.nbAdventurerPerGuild - Adventurers per guild
+     * @param {number} config.goldStart - Starting gold
+     */
     constructor(config) {
         this.config = config;
         this.tour = 1;
@@ -18,20 +27,18 @@ export class GameManager {
         this.rapportsIA = [];
     }
 
-    // Initialise une nouvelle partie
+    /** Initializes a new game with guilds, missions, and candidates */
     initialiserJeu() {
-        // Générer les guildes (1 joueur + 2 IA)
         this.guildes = generateGuilds(3, this.config.nbAdventurerPerGuild, this.config.goldStart);
         this.nomGuildeJoueur = this.guildes[0].nom;
-
-        // Générer les missions du premier tour
         this.genererMissionsGlobales();
-
-        // Générer les premiers candidats
         this.genererCandidatsRecrutement();
     }
 
-    // Charge une partie sauvegardée
+    /**
+     * Loads game from save file
+     * @returns {boolean} True if loaded successfully
+     */
     chargerPartie() {
         const result = loadGame();
         if (result.success) {
@@ -47,7 +54,10 @@ export class GameManager {
         return false;
     }
 
-    // Sauvegarde la partie
+    /**
+     * Saves current game state
+     * @returns {{success: boolean, path?: string, error?: string}} Result
+     */
     sauvegarderPartie() {
         return saveGame({
             tour: this.tour,
@@ -59,52 +69,55 @@ export class GameManager {
         });
     }
 
-    // Récupère la guilde du joueur
+    /** @returns {Guild|null} Player's guild */
     getGuildeJoueur() {
         return this.guildes.find(g => g.nom === this.nomGuildeJoueur) || null;
     }
 
-    // Récupère les guildes IA
+    /** @returns {Guild[]} AI-controlled guilds */
     getGuildesIA() {
         return this.guildes.filter(g => g.isIA);
     }
 
-    // Génère les missions pour ce tour
+    /** Generates new missions for current turn */
     genererMissionsGlobales() {
         this.missionsGlobales = generateTurnMissions(this.tour, 5 + Math.floor(this.tour / 2));
     }
 
-    // Génère les candidats de recrutement
+    /** Generates new recruitment candidates */
     genererCandidatsRecrutement() {
         const niveauMoyen = Math.min(5, 1 + Math.floor(this.tour / 3));
         this.candidatsRecrutement = generateRecruitCandidates(4, niveauMoyen);
     }
 
-    // Récupère les missions disponibles
+    /** @returns {Mission[]} Available (not completed) missions */
     getMissionsDisponibles() {
         return this.missionsGlobales.filter(m => m.disponible);
     }
 
-    // Exécute une mission pour le joueur
+    /**
+     * Executes a mission with the given team
+     * @param {Mission} mission - Mission to execute
+     * @param {Adventurer[]} equipe - Team of adventurers
+     * @returns {Object} Mission report with results
+     */
     executerMission(mission, equipe) {
-        // Marquer la mission comme effectuée
         mission.marquerEffectuee();
-
-        // Résoudre la mission
         const rapport = resolveMission(mission, equipe);
         rapport.nomGuilde = this.nomGuildeJoueur;
-
-        // Appliquer les résultats à la guilde du joueur
         const guild = this.getGuildeJoueur();
         applyMissionResults(guild, rapport);
-
         return rapport;
     }
 
-    // Recrute un candidat
+    /**
+     * Recruits a candidate by index
+     * @param {number} index - Candidate index
+     * @returns {{success: boolean, candidat?: Adventurer, cout?: number, error?: string}} Result
+     */
     recruterCandidat(index) {
         if (index < 0 || index >= this.candidatsRecrutement.length) {
-            return { success: false, error: 'Index invalide' };
+            return { success: false, error: 'Invalid index' };
         }
 
         const candidat = this.candidatsRecrutement[index];
@@ -112,32 +125,28 @@ export class GameManager {
         const guild = this.getGuildeJoueur();
 
         if (!guild.peutPayer(cout)) {
-            return { success: false, error: 'Pas assez d\'or' };
+            return { success: false, error: 'Not enough gold' };
         }
 
         guild.payerOr(cout);
         guild.ajouterAventurier(candidat);
-
-        // Retirer le candidat de la liste
         this.candidatsRecrutement.splice(index, 1);
 
         return { success: true, candidat, cout };
     }
 
-    // Soigne un aventurier
+    /**
+     * Heals an injured adventurer
+     * @param {string} nomAventurier - Adventurer name
+     * @returns {{success: boolean, cout?: number, error?: string}} Result
+     */
     soignerAventurier(nomAventurier) {
         const guild = this.getGuildeJoueur();
         const aventurier = guild.chercherAventurier(nomAventurier);
 
-        if (!aventurier) {
-            return { success: false, error: 'Aventurier non trouvé' };
-        }
+        if (!aventurier) return { success: false, error: 'Adventurer not found' };
+        if (!aventurier.isBesse()) return { success: false, error: 'Adventurer is not injured' };
 
-        if (!aventurier.isBesse()) {
-            return { success: false, error: 'Cet aventurier n\'est pas blessé' };
-        }
-
-        // Calcul du coût selon gravité
         let cout = 50;
         const blessure = aventurier.etat.blessure;
         if (['Blessure Critique', 'Membre Brisé', 'Hémorragie', 'Paralysé Partiel'].includes(blessure)) {
@@ -146,58 +155,39 @@ export class GameManager {
             cout = 150;
         }
 
-        if (!guild.peutPayer(cout)) {
-            return { success: false, error: 'Pas assez d\'or', cout };
-        }
+        if (!guild.peutPayer(cout)) return { success: false, error: 'Not enough gold', cout };
 
         guild.payerOr(cout);
         aventurier.soigner();
-
         return { success: true, cout };
     }
 
-    // Lance le tour suivant
+    /**
+     * Advances to next turn, generates new content, and executes AI turns
+     * @returns {Object[]} AI mission reports
+     */
     lancerTourSuivant() {
         this.tour++;
-
-        // Générer nouvelles missions
         this.genererMissionsGlobales();
-
-        // Générer nouveaux candidats
         this.genererCandidatsRecrutement();
-
-        // Exécuter tours des IA
         this.rapportsIA = executeAllIATurns(this.getGuildesIA(), this.missionsGlobales);
-
         return this.rapportsIA;
     }
 
-    // Vérifie les conditions de fin de partie
+    /**
+     * Checks win/lose conditions
+     * @returns {string} Game state: VICTOIRE, DEFAITE, or EN_COURS
+     */
     verifierConditionsPartie() {
         const guild = this.getGuildeJoueur();
-
         if (!guild) return EtatPartie.DEFAITE;
-
-        // Victoire: niveau moyen >= niveau victoire
-        if (guild.getNiveauMoyen() >= this.niveauVictoire) {
-            return EtatPartie.VICTOIRE;
-        }
-
-        // Défaite: plus d'aventuriers et plus d'or pour recruter
-        if (guild.estDecimee() && guild.or < 100) {
-            return EtatPartie.DEFAITE;
-        }
-
-        // En cours
+        if (guild.getNiveauMoyen() >= this.niveauVictoire) return EtatPartie.VICTOIRE;
+        if (guild.estDecimee() && guild.or < 100) return EtatPartie.DEFAITE;
         return EtatPartie.EN_COURS;
     }
 
-    // Récupère l'état de la partie
+    /** @returns {{tour: number, niveauVictoire: number, etat: string}} Current game state */
     getEtatPartie() {
-        return {
-            tour: this.tour,
-            niveauVictoire: this.niveauVictoire,
-            etat: this.verifierConditionsPartie()
-        };
+        return { tour: this.tour, niveauVictoire: this.niveauVictoire, etat: this.verifierConditionsPartie() };
     }
 }

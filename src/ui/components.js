@@ -9,7 +9,7 @@ import { gradients, colors, icons, boxStyles, formatGold, formatReputation, form
 // Affiche le logo du jeu en ASCII art avec gradient
 export function displayLogo() {
     const logo = figlet.textSync('GUILD MASTER', {
-        font: 'Standard',
+        font: 'ANSI Shadow',
         horizontalLayout: 'default'
     });
     console.log(gradients.title(logo));
@@ -17,9 +17,8 @@ export function displayLogo() {
 }
 
 // Affiche un en-tête stylisé
-export function displayHeader(title, style = 'title') {
-    const content = gradients.title(title);
-    console.log(boxen(content, boxStyles[style] || boxStyles.title));
+export function displayHeader(title) {
+    console.log(boxen(gradients.title(title), boxStyles.title));
 }
 
 // Affiche un message dans une boîte
@@ -81,18 +80,34 @@ export function displayAdventurerStats(adventurer) {
 
     let content = '';
     content += `${colors.textBold(adventurer.name)} ${classeColor(`[${adventurer.classe}]`)}\n`;
-    content += `${formatNiveau(adventurer.stats.niveau)}\n\n`;
+    content += `${formatNiveau(adventurer.stats.niveau)}  ${colors.textDim('Personnalité:')} ${adventurer.personality}\n\n`;
 
+    // Stats principales
     content += `${colors.pv('PV:')} ${progressBar(adventurer.stats.pv, adventurer.stats.pvMax, 15)} ${adventurer.stats.pv}/${adventurer.stats.pvMax}\n`;
     content += `${colors.attaque(`${icons.sword} ATK:`)} ${adventurer.stats.attaque}  `;
     content += `${colors.defense(`${icons.shield} DEF:`)} ${adventurer.stats.defense}  `;
     content += `${colors.vitesse('VIT:')} ${adventurer.stats.vitesse}\n`;
+    content += `${colors.textDim('Critique:')} ${adventurer.stats.chance.critique}%  `;
+    content += `${colors.textDim('Esquive:')} ${adventurer.stats.chance.esquive}%\n\n`;
 
-    content += `\n${colors.textDim('Critique:')} ${adventurer.stats.chance.critique}%  `;
-    content += `${colors.textDim('Esquive:')} ${adventurer.stats.chance.esquive}%`;
+    // Équipement
+    content += `${colors.info('═══ Équipement ═══')}\n`;
+    content += `${icons.sword} Arme: ${colors.text(adventurer.equipement.arme)}\n`;
+    content += `${icons.shield} Armure: ${colors.text(adventurer.equipement.armure)}\n`;
+    content += `${icons.magic} Accessoire: ${colors.text(adventurer.equipement.accessoire)}`;
 
+    // État
     if (adventurer.etat.blessure !== 'Aucune') {
         content += `\n\n${colors.error(`${icons.warning} Blessure: ${adventurer.etat.blessure}`)}`;
+    }
+    if (adventurer.etat.statutSpecial && adventurer.etat.statutSpecial !== 'Aucun') {
+        content += `\n${colors.secondary(`${icons.magic} Statut: ${adventurer.etat.statutSpecial}`)}`;
+    }
+    if (!adventurer.etat.vivant) {
+        content += `\n${colors.error(`${icons.skull} MORT`)}`;
+    }
+    if (adventurer.etat.aFui) {
+        content += `\n${colors.warning('A fui la guilde')}`;
     }
 
     console.log(boxen(content, boxStyles.stats));
@@ -125,6 +140,7 @@ export function displayGuildStats(guild) {
 export function displayMission(mission, index = null) {
     const diffColor = mission.difficulte <= 3 ? colors.success :
         mission.difficulte <= 6 ? colors.warning : colors.error;
+    const borderColor = mission.difficulte <= 3 ? 'green' : mission.difficulte <= 6 ? 'yellow' : 'red';
 
     let title = '';
     if (index !== null) title += `${colors.textDim(`[${index}]`)} `;
@@ -133,7 +149,6 @@ export function displayMission(mission, index = null) {
     let content = '';
     content += `${title}\n`;
     content += `${colors.textDim(mission.description)}\n\n`;
-
     content += `Difficulté: ${diffColor(`${'★'.repeat(mission.difficulte)}${'☆'.repeat(10 - mission.difficulte)}`)} ${diffColor(`(${mission.difficulte}/10)`)}\n`;
     content += `Type: ${colors.info(mission.type)}\n`;
 
@@ -144,7 +159,7 @@ export function displayMission(mission, index = null) {
     content += `\n${formatGold(mission.calculerOrMoyen())} (${mission.recompenses.orMin}-${mission.recompenses.orMax})`;
     content += `  ${formatReputation(mission.calculerReputationMoyenne())}`;
 
-    console.log(boxen(content, { ...boxStyles.stats, borderColor: mission.difficulte <= 3 ? 'green' : mission.difficulte <= 6 ? 'yellow' : 'red' }));
+    console.log(boxen(content, { ...boxStyles.stats, borderColor }));
 }
 
 // Affiche un item

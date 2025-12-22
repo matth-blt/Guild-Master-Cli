@@ -1,15 +1,16 @@
 {
   "name": "guild-master-cli",
   "version": "1.0.0",
-  "description": "Guild Master - Jeu de gestion de guilde en CLI",
+  "description": "Guild Master - A guild management RPG game in CLI",
   "type": "module",
   "main": "index.js",
+  "bin": {
+    "guild-master": "./index.js"
+  },
   "scripts": {
     "start": "node index.js",
-    "build": "npm run build:macos && npm run build:linux && npm run build:windows",
-    "build:macos": "npx caxa --input . --output dist/guild-master-macos -- '{{caxa}}/node_modules/.bin/node' '{{caxa}}/index.js'",
-    "build:linux": "npx caxa --input . --output dist/guild-master-linux -- '{{caxa}}/node_modules/.bin/node' '{{caxa}}/index.js'",
-    "build:windows": "npx caxa --input . --output dist/guild-master-windows.exe -- '{{caxa}}/node_modules/.bin/node' '{{caxa}}/index.js'"
+    "build:mac": "npx caxa --input . --output dist/guild-master --exclude dist --exclude .git --exclude saves -- \"{{caxa}}/node_modules/.bin/node\" \"{{caxa}}/index.js\"",
+    "build:win": "npx caxa --input . --output dist/guild-master.exe --exclude dist --exclude .git --exclude saves -- \"{{caxa}}/node_modules/.bin/node\" \"{{caxa}}/index.js\""
   },
   "dependencies": {
     "@inquirer/prompts": "^7.2.1",
@@ -22,7 +23,16 @@
   "devDependencies": {
     "caxa": "^3.0.1"
   },
-  "keywords": ["cli", "game", "guild", "rpg"],
-  "author": "Matthieu",
-  "license": "MIT"
+  "keywords": [
+    "cli",
+    "game",
+    "guild",
+    "rpg",
+    "terminal"
+  ],
+  "author": "matth-blt",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }

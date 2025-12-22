@@ -1,0 +1,245 @@
+{
+    "lang": {
+        "select": "Choose your language",
+        "french": "Français",
+        "english": "English"
+    },
+    "welcome": {
+        "title": "Welcome to Guild Master!",
+        "description1": "You are the master of an adventurer's guild.",
+        "description2": "Manage your adventurers, accept missions, and make your guild prosper!",
+        "description3": "Face rival guilds controlled by AI!",
+        "saveFound": "Save found: {{name}} (Turn {{turn}})",
+        "loadSave": "Load saved game?",
+        "pressEnter": "Press Enter to start a new game..."
+    },
+    "menu": {
+        "title": "Main Menu",
+        "guildStats": "View guild stats",
+        "adventurers": "Adventurer list",
+        "inventory": "Guild inventory",
+        "missions": "Available missions",
+        "recruit": "Recruit an adventurer",
+        "equip": "Equip an adventurer",
+        "infirmary": "Infirmary (Heal)",
+        "save": "Save game",
+        "load": "Load game",
+        "nextTurn": "Start next turn",
+        "quit": "Quit"
+    },
+    "headers": {
+        "guildStats": "GUILD STATISTICS",
+        "adventurers": "ADVENTURER LIST",
+        "inventory": "GUILD INVENTORY",
+        "missions": "AVAILABLE MISSIONS",
+        "recruitment": "TAVERN - RECRUITMENT",
+        "equipment": "EQUIP ADVENTURER",
+        "infirmary": "INFIRMARY",
+        "save": "SAVE GAME",
+        "load": "LOAD GAME",
+        "teamSelection": "TEAM SELECTION",
+        "missionReport": "MISSION REPORT",
+        "rivalGuilds": "RIVAL GUILDS REPORT",
+        "victory": "VICTORY!",
+        "defeat": "GAME OVER"
+    },
+    "stats": {
+        "level": "Lv.",
+        "hp": "HP",
+        "attack": "ATK",
+        "defense": "DEF",
+        "speed": "SPD",
+        "critical": "Critical",
+        "dodge": "Dodge",
+        "personality": "Personality",
+        "equipment": "Equipment",
+        "weapon": "Weapon",
+        "armor": "Armor",
+        "accessory": "Accessory",
+        "injury": "Injury",
+        "status": "Status",
+        "dead": "DEAD",
+        "fled": "Fled the guild",
+        "injured": "Injured"
+    },
+    "guild": {
+        "gold": "Gold",
+        "reputation": "Reputation",
+        "status": "Status",
+        "adventurers": "Adventurers",
+        "active": "active",
+        "injured": "injured",
+        "averageLevel": "Average level",
+        "totalPower": "Total power",
+        "yourGuild": "Your guild",
+        "objective": "Goal: Reach average level {{level}}",
+        "current": "current"
+    },
+    "mission": {
+        "difficulty": "Difficulty",
+        "type": "Type",
+        "tags": "Tags",
+        "reward": "Reward",
+        "available": "missions available",
+        "select": "Select a mission",
+        "assign": "Assign adventurers to this mission?",
+        "noMissions": "No missions available at the moment.",
+        "newMissions": "New missions available.",
+        "approach": "Approach",
+        "bossFight": "Boss Fight",
+        "finalFight": "Final Fight",
+        "success": "Success!",
+        "failure": "Failure..."
+    },
+    "missionResult": {
+        "complete": "COMPLETE SUCCESS",
+        "partial": "PARTIAL SUCCESS",
+        "failed": "FAILURE",
+        "goldEarned": "earned",
+        "repEarned": "reputation",
+        "dead": "Dead",
+        "injured": "Injured",
+        "fled": "Fled",
+        "sacrifice": "sacrifices heroically!",
+        "flees": "flees!",
+        "protects": "protects",
+        "steals": "disappears with a rare item!"
+    },
+    "team": {
+        "select": "Select your team",
+        "max": "max",
+        "missionInfo": "Mission: {{name}} | Tags: {{tags}}",
+        "bonusLegend": "★ = Class bonus for this mission",
+        "noAdventurers": "No adventurers available (all injured or dead).",
+        "noneSelected": "No adventurer selected. Mission cancelled.",
+        "notUseful": "Not useful"
+    },
+    "recruit": {
+        "poolRefresh": "(Pool refreshes each turn)",
+        "noCandidates": "No candidates available right now.",
+        "newCandidates": "New adventurers will arrive next turn.",
+        "cost": "Cost",
+        "notEnough": "Not enough gold",
+        "confirm": "Recruit {{name}} for {{cost}} gold?",
+        "joined": "has joined your guild!"
+    },
+    "infirmary": {
+        "costInfo": "Healing costs by severity:",
+        "light": "Light injury: 50 gold",
+        "serious": "Serious injury: 150 gold",
+        "critical": "Critical injury: 300 gold",
+        "noInjured": "No injured adventurers!",
+        "heal": "Heal an adventurer",
+        "healed": "has been healed successfully!",
+        "notInjured": "This adventurer is not injured"
+    },
+    "save": {
+        "saving": "Saving...",
+        "success": "Game saved successfully!",
+        "error": "Error while saving",
+        "file": "File"
+    },
+    "load": {
+        "confirm": "Load last save? (Current progress will be lost)",
+        "loading": "Loading...",
+        "success": "Game loaded successfully!",
+        "error": "Error while loading",
+        "checkFile": "Check that saves/savegame.json exists.",
+        "turn": "Turn"
+    },
+    "turn": {
+        "end": "END OF TURN {{turn}}",
+        "next": "Moving to next turn...",
+        "started": "Turn {{turn}} started!",
+        "noRivalAction": "No rival guild completed a mission this turn.",
+        "newCandidates": "New candidates at the tavern."
+    },
+    "victory": {
+        "congrats": "Congratulations! Your guild {{name}} has become legendary!",
+        "finalStats": "Final statistics:",
+        "finalLevel": "Average level",
+        "finalGold": "Final gold",
+        "finalRep": "Reputation",
+        "turnsPlayed": "Turns played",
+        "activeAdventurers": "Active adventurers"
+    },
+    "defeat": {
+        "fallen": "Guild {{name}} has fallen...",
+        "reason": "Reason",
+        "noMoreAdventurers": "No more adventurers and not enough gold to recruit",
+        "turnsSurvived": "Turns survived",
+        "goldRemaining": "Gold remaining",
+        "finalRep": "Final reputation"
+    },
+    "common": {
+        "back": "← Back",
+        "continue": "Press Enter to continue...",
+        "yes": "Yes",
+        "no": "No",
+        "confirm": "Are you sure?",
+        "quitConfirm": "Are you sure you want to quit?",
+        "thanks": "Thanks for playing Guild Master!",
+        "goodbye": "See you soon, Guild Master!",
+        "loading": "Loading...",
+        "generating": "Generating world...",
+        "generated": "World generated successfully!",
+        "launchMission": "Launching mission..."
+    },
+    "classes": {
+        "Guerrier": "Warrior",
+        "Mage": "Mage",
+        "Voleur": "Rogue",
+        "Tank": "Tank",
+        "Prêtre": "Priest",
+        "Villageois": "Villager"
+    },
+    "personalities": {
+        "Courageux": "Brave",
+        "Lâche": "Coward",
+        "Cupide": "Greedy",
+        "Loyal": "Loyal",
+        "Heroique": "Heroic",
+        "Opportuniste": "Opportunist",
+        "Prudent": "Cautious",
+        "Téméraire": "Reckless"
+    },
+    "injuries": {
+        "Aucune": "None",
+        "Égratignure": "Scratch",
+        "Coupure Légère": "Minor Cut",
+        "Brûlure Légère": "Minor Burn",
+        "Coupure Profonde": "Deep Cut",
+        "Fracture Grave": "Severe Fracture",
+        "Brûlure Grave": "Severe Burn",
+        "Empoisonné": "Poisoned",
+        "Blessure Critique": "Critical Injury",
+        "Membre Brisé": "Broken Limb",
+        "Hémorragie": "Hemorrhage",
+        "Paralysé Partiel": "Partial Paralysis"
+    },
+    "rarities": {
+        "Commun": "Common",
+        "Rare": "Rare",
+        "Épique": "Epic",
+        "Légendaire": "Legendary"
+    },
+    "missionTypes": {
+        "Combat": "Combat",
+        "Exploration": "Exploration",
+        "Escorte": "Escort",
+        "Collecte": "Gathering",
+        "Assassinat": "Assassination",
+        "Défense": "Defense"
+    },
+    "missionTags": {
+        "Pièges": "Traps",
+        "Stealth": "Stealth",
+        "Boss": "Boss",
+        "Combat": "Combat",
+        "Magie": "Magic",
+        "Élémentaire": "Elemental",
+        "Longue Mission": "Long Mission",
+        "Non-Morts": "Undead",
+        "Embuscade": "Ambush"
+    }
+}

@@ -1,5 +1,9 @@
-// ===== ENUMS - Guild Master =====
+/**
+ * Game enumerations and constants
+ * @module models/enums
+ */
 
+/** Character classes */
 export const Classe = {
   VILLAGEOIS: 'Villageois',
   MAGE: 'Mage',
@@ -9,6 +13,7 @@ export const Classe = {
   GUERRIER: 'Guerrier'
 };
 
+/** Personality traits affecting combat behavior */
 export const Personality = {
   COURAGEUX: 'Courageux',
   LACHE: 'Lâche',
@@ -20,6 +25,7 @@ export const Personality = {
   NEUTRE: 'Neutre'
 };
 
+/** Weapon types */
 export const Armes = {
   POING: 'Poing',
   EPEE: 'Épée',
@@ -40,6 +46,7 @@ export const Armes = {
   MAINS_NUES: 'Mains Nues'
 };
 
+/** Armor types */
 export const Armures = {
   AUCUNE: 'Aucune',
   ROBE_MAGE: 'Robe de Mage',
@@ -52,6 +59,7 @@ export const Armures = {
   ARMURE_ENCHANTEE: 'Armure Enchantée'
 };
 
+/** Accessory types */
 export const Accessoires = {
   AUCUN: 'Aucun',
   ANNEAU_FORCE: 'Anneau de Force',
@@ -71,6 +79,7 @@ export const Accessoires = {
   MEDAILLON_HEROS: 'Médaillon du Héros'
 };
 
+/** Injury types (light, severe, critical) */
 export const Blessures = {
   AUCUNE: 'Aucune',
   EGRATIGNURE: 'Égratignure',
@@ -90,6 +99,7 @@ export const Blessures = {
   AVEUGLE_TEMPORAIRE: 'Aveuglé Temporaire'
 };
 
+/** Special status effects */
 export const StatutsSpeciaux = {
   AUCUN: 'Aucun',
   MAUDIT: 'Maudit',
@@ -110,6 +120,7 @@ export const StatutsSpeciaux = {
   BERSERKER: 'Berserker'
 };
 
+/** Mission categories */
 export const TypeMission = {
   DONJON: 'Donjon',
   ESCORTE: 'Escorte',
@@ -120,6 +131,7 @@ export const TypeMission = {
   RAID: 'Raid'
 };
 
+/** Mission tags for class bonuses */
 export const TagMission = {
   NON_MORTS: 'Non-Morts',
   PIEGES: 'Pièges',
@@ -133,6 +145,7 @@ export const TagMission = {
   STEALTH: 'Discrétion'
 };
 
+/** Item categories */
 export const TypeItem = {
   ARME: 'Arme',
   ARMURE: 'Armure',
@@ -140,6 +153,7 @@ export const TypeItem = {
   POTION: 'Potion'
 };
 
+/** Item rarity levels */
 export const Rarete = {
   COMMUN: 'Commun',
   RARE: 'Rare',
@@ -147,19 +161,21 @@ export const Rarete = {
   LEGENDAIRE: 'Légendaire'
 };
 
+/** Mission outcome statuses */
 export const StatutMission = {
   SUCCES_COMPLET: 'Succès Complet',
   SUCCES_PARTIEL: 'Succès Partiel',
   ECHEC: 'Échec'
 };
 
+/** Game state */
 export const EtatPartie = {
   EN_COURS: 'En Cours',
   VICTOIRE: 'Victoire',
   DEFAITE: 'Défaite'
 };
 
-// Mapping classe -> arme par défaut
+/** Default weapon by class */
 export const ArmeParDefaut = {
   [Classe.VILLAGEOIS]: Armes.BOIS,
   [Classe.MAGE]: Armes.BATON_MAGIQUE,
@@ -169,7 +185,7 @@ export const ArmeParDefaut = {
   [Classe.GUERRIER]: Armes.EPEE_LONGUE
 };
 
-// Mapping classe -> armure par défaut
+/** Default armor by class */
 export const ArmureParDefaut = {
   [Classe.VILLAGEOIS]: Armures.AUCUNE,
   [Classe.MAGE]: Armures.ROBE_MAGE,

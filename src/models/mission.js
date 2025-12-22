@@ -1,9 +1,23 @@
 import { TypeMission, TagMission, Rarete } from './enums.js';
 
-// ===== MISSION CLASS =====
+/**
+ * Represents a mission in the game
+ * @class Mission
+ */
 export class Mission {
+    /**
+     * Creates a new Mission instance
+     * @param {Object} options - Mission configuration
+     * @param {string} options.nom - Mission name
+     * @param {string} options.description - Mission description
+     * @param {number} options.difficulte - Difficulty level (1-10)
+     * @param {string} options.type - Mission type
+     * @param {string[]} options.tags - Mission tags for class bonuses
+     * @param {Object} options.recompenses - Reward configuration
+     * @param {boolean} options.disponible - Whether mission is available
+     */
     constructor({
-        nom = 'Mission Inconnue',
+        nom = 'Unknown Mission',
         description = '',
         difficulte = 1,
         type = TypeMission.EXPLORATION,
@@ -13,7 +27,7 @@ export class Mission {
     } = {}) {
         this.nom = nom;
         this.description = description;
-        this.difficulte = Math.min(10, Math.max(1, difficulte)); // 1-10
+        this.difficulte = Math.min(10, Math.max(1, difficulte));
         this.type = type;
         this.tags = tags;
 
@@ -29,19 +43,31 @@ export class Mission {
         this.disponible = disponible;
     }
 
+    /**
+     * Checks if mission has a specific tag
+     * @param {string} tag - Tag to check
+     * @returns {boolean} True if tag exists
+     */
     hasTag(tag) {
         return this.tags.includes(tag);
     }
 
+    /** @returns {number} Average gold reward */
     calculerOrMoyen() {
         return Math.floor((this.recompenses.orMin + this.recompenses.orMax) / 2);
     }
 
+    /** @returns {number} Average reputation reward */
     calculerReputationMoyenne() {
         return Math.floor((this.recompenses.reputationMin + this.recompenses.reputationMax) / 2);
     }
 
-    // Génère une récompense aléatoire en or
+    /**
+     * Generates random gold reward based on success
+     * @param {boolean} succes - Whether mission succeeded
+     * @param {boolean} partiel - Whether success was partial
+     * @returns {number} Gold reward
+     */
     genererRecompenseOr(succes = true, partiel = false) {
         const base = this.recompenses.orMin +
             Math.floor(Math.random() * (this.recompenses.orMax - this.recompenses.orMin));
@@ -51,21 +77,27 @@ export class Mission {
         return base;
     }
 
-    // Génère une récompense aléatoire de réputation
+    /**
+     * Generates random reputation reward based on success
+     * @param {boolean} succes - Whether mission succeeded
+     * @param {boolean} partiel - Whether success was partial
+     * @returns {number} Reputation reward (-5 on failure)
+     */
     genererRecompenseReputation(succes = true, partiel = false) {
         const base = this.recompenses.reputationMin +
             Math.floor(Math.random() * (this.recompenses.reputationMax - this.recompenses.reputationMin));
 
-        if (!succes) return -5; // Perte de réputation en cas d'échec
+        if (!succes) return -5;
         if (partiel) return Math.floor(base * 0.3);
         return base;
     }
 
-    // Marquer comme effectuée
+    /** Marks mission as completed (unavailable) */
     marquerEffectuee() {
         this.disponible = false;
     }
 
+    /** @returns {Object} JSON representation for saving */
     toJSON() {
         return {
             nom: this.nom,
@@ -78,14 +110,19 @@ export class Mission {
         };
     }
 
+    /**
+     * Creates Mission from saved data
+     * @param {Object} data - Saved mission data
+     * @returns {Mission} Restored mission
+     */
     static fromJSON(data) {
         return new Mission(data);
     }
 }
 
-// ===== TEMPLATES DE MISSIONS =====
+/** Mission templates organized by difficulty */
 export const MissionTemplates = [
-    // Missions faciles (difficulté 1-3)
+    // Easy missions (difficulty 1-3)
     {
         nom: 'Nettoyage de Cave',
         description: 'Des rats géants infestent la cave d\'un aubergiste. Éliminez-les!',
@@ -111,7 +148,7 @@ export const MissionTemplates = [
         recompenses: { orMin: 40, orMax: 100, reputationMin: 3, reputationMax: 8 }
     },
 
-    // Missions moyennes (difficulté 4-6)
+    // Medium missions (difficulty 4-6)
     {
         nom: 'Donjon des Ombres',
         description: 'Explorez un ancien donjon et récupérez un artefact perdu.',
@@ -145,7 +182,7 @@ export const MissionTemplates = [
         recompenses: { orMin: 250, orMax: 450, reputationMin: 20, reputationMax: 35 }
     },
 
-    // Missions difficiles (difficulté 7-8)
+    // Hard missions (difficulty 7-8)
     {
         nom: 'Temple Maudit',
         description: 'Purifiez un temple corrompu par une magie ancienne.',
@@ -171,7 +208,7 @@ export const MissionTemplates = [
         recompenses: { orMin: 500, orMax: 850, reputationMin: 40, reputationMax: 60, raretesItems: [Rarete.EPIQUE] }
     },
 
-    // Missions très difficiles (difficulté 9-10)
+    // Very hard missions (difficulty 9-10)
     {
         nom: 'Raid sur la Forteresse Noire',
         description: 'Infiltrez la forteresse du Seigneur des Ténèbres.',
@@ -190,7 +227,11 @@ export const MissionTemplates = [
     }
 ];
 
-// Génère une mission aléatoire selon la difficulté désirée
+/**
+ * Generates a random mission up to max difficulty
+ * @param {number} difficulteMax - Maximum difficulty level
+ * @returns {Mission} Generated mission
+ */
 export function generateRandomMission(difficulteMax = 5) {
     const templates = MissionTemplates.filter(t => t.difficulte <= difficulteMax);
     if (templates.length === 0) return new Mission(MissionTemplates[0]);
@@ -199,12 +240,16 @@ export function generateRandomMission(difficulteMax = 5) {
     return new Mission({ ...template, disponible: true });
 }
 
-// Génère plusieurs missions variées
+/**
+ * Generates multiple varied missions
+ * @param {number} count - Number of missions
+ * @param {number} difficulteMoyenne - Target average difficulty
+ * @returns {Mission[]} Array of missions
+ */
 export function generateMissions(count = 5, difficulteMoyenne = 5) {
     const missions = [];
 
     for (let i = 0; i < count; i++) {
-        // Variation de ±2 autour de la difficulté moyenne
         const variation = Math.floor(Math.random() * 5) - 2;
         const diffMax = Math.min(10, Math.max(1, difficulteMoyenne + variation));
         missions.push(generateRandomMission(diffMax));

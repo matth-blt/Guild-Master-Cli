@@ -56,16 +56,62 @@ export async function selectAdventurerPrompt(aventuriers, message = 'Sélectionn
     return result === -1 ? null : result;
 }
 
-// Menu de sélection multiple d'aventuriers
-export async function selectMultipleAdventurersPrompt(aventuriers, maxSelection = 4, message = 'Sélectionner une équipe') {
+// Menu de sélection multiple d'aventuriers avec compatibilité mission
+export async function selectMultipleAdventurersPrompt(aventuriers, maxSelection = 4, message = 'Sélectionner une équipe', mission = null) {
     if (aventuriers.length === 0) {
         return [];
     }
 
-    const choices = aventuriers.map((a, i) => ({
-        name: `${a.name} - ${a.classe} (Niv. ${a.stats.niveau} | Puissance: ${a.getPuissance()})`,
-        value: i
-    }));
+    // Fonction pour calculer le bonus classe/tags
+    const getTagBonus = (classe, tags) => {
+        if (!tags || tags.length === 0) return { bonus: 0, description: '' };
+
+        let totalBonus = 0;
+        const bonusDetails = [];
+
+        for (const tag of tags) {
+            if (tag === 'Pièges' && classe === 'Voleur') { totalBonus += 25; bonusDetails.push('+pièges'); }
+            if (tag === 'Stealth' && classe === 'Voleur') { totalBonus += 25; bonusDetails.push('+furtif'); }
+            if ((tag === 'Boss' || tag === 'Combat') && (classe === 'Guerrier' || classe === 'Tank')) { totalBonus += 20; bonusDetails.push('+combat'); }
+            if ((tag === 'Magie' || tag === 'Élémentaire') && classe === 'Mage') { totalBonus += 30; bonusDetails.push('+magie'); }
+            if (tag === 'Longue Mission' && classe === 'Prêtre') { totalBonus += 25; bonusDetails.push('+endurance'); }
+            if (tag === 'Non-Morts' && (classe === 'Mage' || classe === 'Prêtre')) { totalBonus += 20; bonusDetails.push('+sacré'); }
+            if (tag === 'Embuscade' && (classe === 'Voleur' || classe === 'Tank')) { totalBonus += 20; bonusDetails.push('+embuscade'); }
+        }
+
+        return { bonus: totalBonus, description: bonusDetails.join(' ') };
+    };
+
+    const choices = aventuriers.map((a, i) => {
+        let display = `${a.name} - ${a.classe} (Niv.${a.stats.niveau})`;
+
+        // Ajouter stats principales
+        const stats = `ATK:${a.stats.attaque} DEF:${a.stats.defense}`;
+        display += ` ${colors.textDim(`[${stats}]`)}`;
+
+        // Ajouter bonus mission si fournie
+        if (mission && mission.tags) {
+            const tagInfo = getTagBonus(a.classe, mission.tags);
+            if (tagInfo.bonus > 0) {
+                display += ` ${colors.success(`★+${tagInfo.bonus}% ${tagInfo.description}`)}`;
+            } else if (a.classe === 'Villageois') {
+                display += ` ${colors.error('✗ Peu utile')}`;
+            }
+        }
+
+        // Indicateur blessure
+        if (a.etat && a.etat.blessure !== 'Aucune') {
+            display += ` ${colors.warning('⚠ Blessé')}`;
+        }
+
+        return { name: display, value: i };
+    });
+
+    // Ajouter légende si mission fournie
+    if (mission) {
+        console.log(colors.textDim(`  Mission: ${mission.nom} | Tags: ${mission.tags.join(', ')}`));
+        console.log(colors.textDim(`  ★ = Bonus classe pour cette mission\n`));
+    }
 
     const result = await checkbox({
         message: `${colors.primary(message)} (max ${maxSelection})`,
