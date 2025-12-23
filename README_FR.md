@@ -27,8 +27,8 @@ npm start
 
 ### Compiler des Exécutables
 ```bash
-npm run build        # Compiler pour la plateforme actuelle
-npm run build:all    # Compiler pour toutes les plateformes
+npm run build:win      # Compiler pour windows
+npm run build:mac      # Compiler pour mac
 ```
 
 ## 🎯 Comment Jouer
