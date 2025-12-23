@@ -27,8 +27,8 @@ npm start
 
 ### Build Standalone Executables
 ```bash
-npm run build        # Build for current platform
-npm run build:all    # Build for all platforms
+npm run build:win      # Build for windows
+npm run build:mac      # Build for mac  
 ```
 
 ## 🎯 How to Play
